@@ -46,3 +46,4 @@ export const comparePasswords = (password, hash) => {
 export const hashPassword = (password) => {
     return bcrypt.hash(password, 5)
 }
+
