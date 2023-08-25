@@ -6,7 +6,7 @@ import { handleInput } from "./modules/middleware"
 const router = Router()
 
 /**
- * Product
+ * Products
  */
 
 router.get("/product", (req, res) => {
@@ -18,7 +18,7 @@ router.post("/product", () => {})
 router.delete("/product", () => {})
 
 /**
- * Update
+ * Updates
  */
 
 router.get("/update", () => {})
@@ -40,7 +40,7 @@ router.delete("/update", () => {})
 
 
 /**
- * Update point
+ * Update points
  */ 
 
 router.get("/updatepoint", () => {})
