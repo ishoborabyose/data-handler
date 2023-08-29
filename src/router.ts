@@ -1,6 +1,7 @@
 import { Router } from "express"
 import { body, oneOf } from "express-validator"
 import { handleInput } from "./modules/middleware"
+import { createProduct, deleteProduct, getOneProduct, getProducts } from "./handlers/product"
 
 
 const router = Router()
@@ -9,13 +10,11 @@ const router = Router()
  * Products
  */
 
-router.get("/product", (req, res) => {
-    res.json({message: "Hello!"})
-})
-router.get("/product/:id", () => {})
+router.get("/product", getProducts)
+router.get("/product/:id", getOneProduct)
 router.put("/product/:id", body("name").isString(), handleInput, () => {})
-router.post("/product", () => {})
-router.delete("/product", () => {})
+router.post("/product", createProduct)
+router.delete("/product", deleteProduct)
 
 /**
  * Updates
@@ -26,6 +25,7 @@ router.get("/update/:id", () => {})
 router.put("/update/:id", 
 body("title").optional, 
 body("body").optional, 
+ 
 oneOf([
     body('status').custom(value => ['IN_PROGRESS', 'SHIPPED', 'DEPRECATED'].includes(value))
   ]),  
@@ -34,6 +34,7 @@ body("version").optional,
  )
 router.post("/update", 
 body("title").exists().isString(), 
+body("body").exists().isString(),
 body("body").exists().isString(), 
 () => {})
 router.delete("/update", () => {})
