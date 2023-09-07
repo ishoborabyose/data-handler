@@ -1,46 +1,68 @@
 import { Router } from "express"
-import { body, validationResult } from "express-validator"
+import { body, oneOf } from "express-validator"
+import { handleInput } from "./modules/middleware"
+import { createProduct, deleteProduct, getOneProduct, getProducts, updateProduct } from "./handlers/product"
+import { createUpdate, deleteUpdate, getOneUpdate, getUpdates, updateUpdate } from "./handlers/update"
+
 
 const router = Router()
 
 /**
- * Product
+ * Products
  */
 
-router.get("/product", (req, res) => {
-    res.json({message: "Hello!"})
-})
-router.get("/product/:id", () => {})
-router.put("/product/:id", [body("name").isString()], (req, res) => {
-    const errors = validationResult(req)
-    if(!errors.isEmpty()){
-        res.status(400)
-        res.json({errors: errors.array()})
-    }
-})
-router.post("/product", () => {})
-router.delete("/product", () => {})
+router.get("/product", getProducts)
+router.get("/product/:id", getOneProduct)
+router.put("/product/:id", body("name").isString(), handleInput, updateProduct)
+router.post("/product", createProduct)
+router.delete("/product/:id", deleteProduct)
 
 /**
- * Update
+ * Updates
  */
 
-router.get("/update", () => {})
-router.get("/update/:id", () => {})
-router.put("/update/:id", () => {})
-router.post("/update", () => {})
-router.delete("/update", () => {})
+router.get("/update", getUpdates)
+router.get("/update/:id", getOneUpdate)
+router.put("/update/:id", 
+// body("title").optional, 
+// body("body").optional, 
+ 
+// oneOf([
+//     body('status').custom(value => ['IN_PROGRESS', 'SHIPPED', 'DEPRECATED'].includes(value))
+//   ]),  
+// body("version").optional,  
+updateUpdate
+ )
+router.post("/update", 
+body("title").exists().isString(), 
+body("body").exists().isString(),
+body("body").exists().isString(), 
+createUpdate
+)
+router.delete("/update/:id", deleteUpdate)
 
 
 /**
- * Update point
- */
+ * Update points
+ */ 
 
 router.get("/updatepoint", () => {})
 router.get("/updatepoint/:id", () => {})
-router.put("/updatepoint/:id", () => {})
-router.post("/updatepoint", () => {})
+router.put("/updatepoint/:id", 
+body("name").optional().isString(), 
+body("description").optional().isString(), 
+() => {}
+)
+router.post("/updatepoint", 
+body("name").exists().isString(), 
+body("description").exists().isString(),
+body("updateId").exists().isString(),
+() => {}
+)
 router.delete("/updatepoint", () => {})
-
+router.use((err, req, res, next) =>{
+  console.log(err)
+  res.json({message: "In router handler"})
+})
 
 export default router
